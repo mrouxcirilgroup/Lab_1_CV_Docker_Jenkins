@@ -1,11 +1,18 @@
 pipeline {
       agent any
-      stages{
+      stages {
         // Clean image
-        stage('Création de  image docker') {
+        stage('Cleaning des images docker') {
             steps {
-                sh 'docker stop cv_mroux'
-                sh 'docker rm cv_mroux'
+                script {
+                    def exists = sh(script: "docker ps -a --format '{{.Names}}' | grep -w cv_mroux || true", returnStdout: true).trim()
+                    if (exists) {
+                        sh 'docker stop cv_mroux'
+                        sh 'docker rm cv_mroux'
+                    } else {
+                        echo "Container cv_mroux does not exist, skipping stop/rm."
+                    }
+                }
             }
             post {
                 success {
