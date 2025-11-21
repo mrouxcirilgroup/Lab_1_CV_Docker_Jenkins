@@ -5,6 +5,7 @@ pipeline {
         // Configuration Email
         EMAIL_RECIPIENTS = 'mroux@cirilgroup.com'
         EMAIL_FROM = '"Jenkins CI/CD" <jenkins-ci@smart-it-partner.com>'
+        DOCKERHUB_CREDENTIALS = credentials('DockerHub')
     }
       stages {
         // Clean image
@@ -51,6 +52,24 @@ pipeline {
                 }
             }
         }
+
+        stage('Tag and push image to dockerhub de mrouxcirilgroup') {
+                     steps {
+                         echo "tag and push image ..."
+                         sh "docker tag cv_mroux mrouxcirilgroup/cv_mroux"
+                         sh "docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW"
+                         sh "docker push mrouxcirilgroup/cv_mroux"
+                         sh "docker logout"
+                     }
+                     post {
+                         success {
+                             echo "====++++success++++===="
+                         }
+                         failure {
+                             echo "====++++failed++++===="
+                         }
+                     }
+          }
       }
 
       post {
