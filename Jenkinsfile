@@ -4,15 +4,7 @@ pipeline {
         // Clean image
         stage('Cleaning des images docker') {
             steps {
-                script {
-                    def exists = sh(script: "docker ps -a --format '{{.Names}}' | grep -w cv_mroux || true", returnStdout: true).trim()
-                    if (exists) {
-                        sh 'docker stop cv_mroux'
-                        sh 'docker rm cv_mroux'
-                    } else {
-                        echo "Container cv_mroux does not exist, skipping stop/rm."
-                    }
-                }
+                sh 'docker rm -f cv_mroux || true'
             }
             post {
                 success {
