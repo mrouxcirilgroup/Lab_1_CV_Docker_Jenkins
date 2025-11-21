@@ -1,6 +1,22 @@
 pipeline {
       agent any
       stages{
+        // Clean image
+        stage('Création de  image docker') {
+            steps {
+                sh 'docker stop cv_mroux'
+                sh 'docker rm cv_mroux'
+            }
+            post {
+                success {
+                    echo "====++++Docker images cleaning success++++===="
+                }
+                failure {
+                    echo "====++++Docker cleaning failed++++===="
+                }
+            }
+        }
+
         // Création image
         stage('Création de  image docker') {
             steps {
@@ -16,7 +32,7 @@ pipeline {
             }
         }
 
-          // Création image
+          // Run container
         stage('Lancer un container de cette image') {
             steps {
                 sh 'docker run -d -p 8074:80 --name cv_mroux_cont cv_mroux'
