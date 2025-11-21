@@ -4,7 +4,7 @@ pipeline {
         // Clean image
         stage('Cleaning des images docker') {
             steps {
-                sh 'docker rm -f cv_mroux || true'
+                sh 'docker rm -f cv_mroux_cont || true'
             }
             post {
                 success {
